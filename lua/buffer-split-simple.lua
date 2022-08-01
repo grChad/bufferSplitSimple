@@ -9,8 +9,7 @@ function Get_icon(filename, extension)
          extension = ""
       end
 
-      -- file_icon, _ = require('nvim-web-devicons').get_icon_color(filename, extension)
-      file_icon, _ = require('nvim-web-devicons').get_icon_color_by_filetype(extension, opts)
+      file_icon, _ = require("nvim-web-devicons").get_icon_color(filename, extension)
 
       if file_icon == nil then
          file_icon = default_file_icon
