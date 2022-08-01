@@ -29,6 +29,5 @@ use {
   config = function()
     require('buffer-split-simple').setup()
   end
-
 }
 ```
