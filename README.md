@@ -1,6 +1,6 @@
 # ¿Que es bufferSplitSimple?
 
-> Es un clone de <code>Idelosa/**buffertag**</code>, pero con pequeños cambios
+> Es un clone de [Idelosa/**buffertag**](https://github.com/ldelossa/buffertag), pero con pequeños cambios
 
 <img src="./assets/image-01.png">
 
