@@ -1,45 +1,29 @@
-local web_devicons = require('nvim-web-devicons')
-
-local get_icon = function(filename, extension)
-	local file_icon = ''
-	local default_file_icon = ''
-
-	if filename ~= nil then
-		if extension == nil then
-			extension = ''
-		end
-
-		file_icon, _ = web_devicons.get_icon_color(filename, extension)
-
-		if file_icon == nil then
-			file_icon = default_file_icon
-		end
-		return file_icon .. ' '
-	end
-end
-
 -- holds any currently open floating windows displaying buffer tags
 local M = {}
-local float_wins = {}
 
-local lista_aux = {}
+local getInfo = require('get_info')
+
+local float_wins = {}
 
 local create_tag_float = function(parent_win)
 	local buf = vim.api.nvim_win_get_buf(parent_win)
 	local buf_name = vim.api.nvim_buf_get_name(buf)
+	buf_name = buf_name:match('[^/]*$') -- me quita los caracteres / y lo que tenga primero dejando el nombre del archivo y su extensión
 
 	if #buf_name <= 0 then
 		return
-	else
-		for item in string.gmatch(buf_name, '%a+') do
-			table.insert(lista_aux, item)
-		end
 	end
 
-	local file_name = lista_aux[#lista_aux - 1]
-	local file_type = lista_aux[#lista_aux]
+	local fileName = buf_name:match('(.-)%.[^%.]-$')
+	local fileExt = buf_name:match('%.([^%.]*)$')
 
-	buf_name = ' ' .. get_icon(file_name, file_type) .. file_name .. '.' .. file_type
+	local the_icon = getInfo.get_icon_color(fileName, fileExt).icon
+	local the_icon_color = getInfo.get_icon_color(fileName, fileExt).color
+
+	vim.api.nvim_set_hl(0, 'ColorIconBuffer', { fg = the_icon_color, bg = '#000000' })
+	vim.api.nvim_set_hl(0, 'TextBufferSplit', { fg = '#E7E4E0', bg = '#000000', bold = true })
+
+	buf_name = ' ' .. the_icon .. fileName .. '.' .. fileExt .. ' '
 
 	-- only consider normal buffers with files loaded into them.
 	if vim.api.nvim_buf_get_option(buf, 'buftype') ~= '' then
@@ -51,21 +35,24 @@ local create_tag_float = function(parent_win)
 		vim.api.nvim_err_writeln('details_popup: could not create details buffer')
 		return nil
 	end
+
 	vim.api.nvim_buf_set_option(buf2, 'bufhidden', 'delete')
 	vim.api.nvim_buf_set_option(buf2, 'modifiable', true)
-	vim.api.nvim_buf_set_lines(buf2, 0, 0, false, { buf_name })
+	vim.api.nvim_buf_set_lines(buf2, 0, -1, false, { buf_name })
+	vim.api.nvim_buf_add_highlight(buf2, 0, 'ColorIconBuffer', 0, 0, 4)
+	vim.api.nvim_buf_add_highlight(buf2, 0, 'TextBufferSplit', 0, 4, #buf_name + 2)
 	vim.api.nvim_buf_set_option(buf2, 'modifiable', false)
 
 	local popup_conf = {
 		relative = 'win',
 		anchor = 'NE',
 		win = parent_win,
-		width = #buf_name,
+		width = #buf_name - 2,
 		height = 1,
 		focusable = false,
 		zindex = 1,
 		style = 'minimal',
-		border = 'rounded',
+		border = 'none',
 		row = 0,
 		col = vim.api.nvim_win_get_width(parent_win),
 	}
