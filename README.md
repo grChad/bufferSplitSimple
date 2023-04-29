@@ -1,4 +1,4 @@
-# ¿Que es bufferSplitSimple?
+<h1 align="center">¿Que es bufferSplitSimple?</h1>
 
 > Es un clone de [Idelosa/buffertag](https://github.com/ldelossa/buffertag), pero con pequeños cambios
 
@@ -13,31 +13,20 @@
 - No tiene ninguna ruta anterior: Solo _FileName_ y _FileType_
 - Se agrego **Iconos** con [nvim-web-devicons](https://github.com/kyazdani42/nvim-web-devicons)
 
-## Requisitos:
-
-Para usar de manera mas cómoda se recomienda tener activado `laststatus = 3`
-
-```vim
-  set laststatus=3          "Para Vim
-```
-
-```lua
-  vim.opt.laststatus = 3    -- Para lua
-```
-
-## Pendiente:
-
-- [ ] Agregar color a los iconos.
-
 ## uso:
 
 Con [packer](https://github.com/wbthomason/packer.nvim):
 
 ```lua
-  use {
-      'GabrielRIP/bufferSplitSimple',
-      config = function()
-          require('buffer-split-simple').setup()
-      end
-  }
+use {
+    'gr92/bufferSplitSimple',
+    config = function()
+        require('buffer-split-simple').setup()
+    end
+}
 ```
+
+## Pendiente:
+
+- [x] Agregar color a los iconos.
+- [ ] Problemas de color en buffers al tener más de 3 abiertos.
